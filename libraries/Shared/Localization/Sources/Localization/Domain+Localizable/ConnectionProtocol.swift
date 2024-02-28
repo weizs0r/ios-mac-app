@@ -1,7 +1,7 @@
 //
-//  Created on 18/06/2023.
+//  Created on 28/02/2024.
 //
-//  Copyright (c) 2023 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,39 +17,35 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-
-import ComposableArchitecture
-
-import Localization
+import Domain
 import Strings
 
-public enum KillSwitchState: LocalizedStringConvertible {
-    case on
-    case off
+extension ConnectionProtocol: LocalizedStringConvertible {
 
     public var localizedDescription: String {
         switch self {
-        case .on: return Localizable.settingsKillswitchOn
-        case .off: return Localizable.settingsKillswitchOff
+        case let .vpnProtocol(vpnProtocol):
+            return vpnProtocol.localizedDescription
+        case .smartProtocol:
+            return "Smart"
         }
     }
 }
 
-public struct KillSwitchSettingsFeature: Reducer {
+extension VpnProtocol: LocalizedStringConvertible {
 
-    public typealias State = KillSwitchState
-
-    public init() { }
-
-    public enum Action: Equatable {
-        case set(value: KillSwitchState)
-    }
-
-    public func reduce(into state: inout KillSwitchState, action: Action) -> Effect<Action> {
-        switch action {
-        case let .set(value):
-            state = value
-            return .none
+    public var localizedDescription: String {
+        switch self {
+        case .ike: return "IKEv2"
+        case .openVpn(let transport):
+            return "OpenVPN (\(transport.rawValue.uppercased()))"
+        case .wireGuard(let transport):
+            switch transport {
+            case .udp, .tcp:
+                return "WireGuard (\(transport.rawValue.uppercased()))"
+            case .tls:
+                return "Stealth"
+            }
         }
     }
 }

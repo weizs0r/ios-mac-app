@@ -1,7 +1,7 @@
 //
-//  Created on 2022-11-22.
+//  Created on 28/02/2024.
 //
-//  Copyright (c) 2022 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -15,3 +15,21 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
+
+import Foundation
+import Domain
+import Strings
+
+extension Logical {
+    public var entryCountry: String {
+        return LocalizationUtility.default.countryName(forCode: entryCountryCode) ?? ""
+    }
+
+    public var exitCountry: String {
+        return LocalizationUtility.default.countryName(forCode: exitCountryCode) ?? ""
+    }
+
+    public var country: String {
+        return LocalizationUtility.default.countryName(forCode: exitCountryCode) ?? ""
+    }
+}
