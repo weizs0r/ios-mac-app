@@ -18,5 +18,6 @@
 
 import Foundation
 import Logging
+import PMLogger
 
-let log: Logging.Logger = Logging.Logger(label: "ProtonVPN.VPNShared.logger")
+let log: Logging.Logger = Logging.Logger(label: "ProtonVPN.LocalFeatureFlags.logger")
