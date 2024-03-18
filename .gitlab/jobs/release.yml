@@ -78,6 +78,11 @@ distribute:mac:alpha:
     - if: $CI_COMMIT_BRANCH == "develop"
       when: always
       allow_failure: true # the pipeline continues running even if the manual job is not run
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
+      variables:
+        APP_BRANCH: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     # Otherwise allow manual release
     - when: manual
       allow_failure: true
