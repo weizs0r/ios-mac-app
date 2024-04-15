@@ -348,14 +348,14 @@ lane :run_testplan do |options|
     testplan = options[:testplan]
 
     if options[:ios]
-      destination = "iphonesimulator16.4"
+      destination = "iphonesimulator17.0"
       devices = $ios_test_device
       output_folder_path = $output_folder_ios
       destination_xcodebuild = nil
       scheme = "ProtonVPN-iOS"
     
     elsif options[:macos]
-      destination = "macosx13.3"
+      destination = "macosx14.0"
       devices = nil
       output_folder_path = $output_folder_macos
       destination_xcodebuild = "platform=OS X"
