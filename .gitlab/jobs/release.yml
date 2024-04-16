@@ -90,3 +90,26 @@ distribute:mac:alpha:
     project: apple/vpn/mac-ci
     branch: mac-v4
     strategy: depend
+
+distribute:ios:nexus:
+  stage: distribute
+  tags:
+    - shared-medium
+  image: $CI_SERVER_HOST:4567/tpe/test-scripts
+  when: manual
+  needs:
+    - job: build:tests:ios
+      artifacts: true
+  before_script: []
+  after_script: [] 
+  script:
+  # Delete old assets
+    - /usr/local/bin/nexus/delete_asset_on_nexus.py
+      --repository $NEXUS_REPO
+      --group $NEXUS_GROUP
+  # Upload new assets
+    - /usr/local/bin/nexus/upload_to_nexus.py
+        --path "${JOBS_OUTPUT_PATH}ios/"
+        --repository $NEXUS_REPO
+        --group $NEXUS_GROUP
+        --filename "ProtonVPN-iOS_build_test_products.zip"
