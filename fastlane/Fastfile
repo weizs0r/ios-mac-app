@@ -339,7 +339,7 @@ desc "Run tests"
 desc "This lane depends on the result of `build_tests` lane. Global variables have default values"
 desc "that should be working if lanes are run on your local machine."
 desc ""
-desc "Usage: `fastlane run_testplan icos:true testplan:ProtonVPN-iOS-Unit-All`"
+desc "Usage: `fastlane run_testplan ios:true testplan:ProtonVPN-iOS-Unit-All`"
 desc "Usage: `fastlane run_testplan macos:true testplan:ProtonVPN-macOS-Unit-All`"
 lane :run_testplan do |options|
   
@@ -386,7 +386,7 @@ lane :run_testplan do |options|
           xctestrun: xctestrunPath,
           clean: false,
           skip_package_dependencies_resolution: true, # prevents fastlane from needlessly fetching all SPM dependencies before running tests
-          testplan: testplan,
+#          testplan: testplan, # Since Xcode 15 this breaks iOS tests. Thankfully, it's enough to have proper xctestrun set to run the testplan we want.
           devices: devices,
           result_bundle: true,
           destination: destination_xcodebuild,
