@@ -52,10 +52,13 @@
     # Make sure xcode uses system ssh/git settings
     - defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
     # Allow xcode macros
-    - defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
+    # - cat .gitlab/misc/macros.json
+    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
+    # - mkdir && cp .gitlab/misc/macros.json ~/Library/org.swift.swiftpm/security/macros.json
     - !reference [.prepare_secrets, before_script] # Download obfuscated constants
   after_script:
     - ssh-add -D # Delete all ssh private keys
+    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
   interruptible: true
   tags:
     - vpn-ios-tests
@@ -82,9 +85,12 @@
     # Make sure xcode uses system ssh/git settings
     - defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
     # Allow xcode macros
-    - defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
+    # - cat .gitlab/misc/macros.json
+    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
+    # - mkdir && cp .gitlab/misc/macros.json ~/Library/org.swift.swiftpm/security/macros.json
   after_script:
     - ssh-add -D # Delete all ssh private keys
+    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
   interruptible: true
 
 # Include this in artifacts part to take cobertura reports as artifacts
