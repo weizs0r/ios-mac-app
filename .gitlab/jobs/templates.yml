@@ -51,14 +51,11 @@
     - if [ -z "$(ssh-keygen -F $CI_SERVER_HOST)" ]; then ssh-keyscan -H $CI_SERVER_HOST >> ~/.ssh/known_hosts; fi
     # Make sure xcode uses system ssh/git settings
     - defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
-    # Allow xcode macros
-    # - cat .gitlab/misc/macros.json
-    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
-    # - mkdir && cp .gitlab/misc/macros.json ~/Library/org.swift.swiftpm/security/macros.json
+    - !reference [.macros, add] # Allow predefined Xcode macros
     - !reference [.prepare_secrets, before_script] # Download obfuscated constants
   after_script:
     - ssh-add -D # Delete all ssh private keys
-    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
+    - !reference [.macros, remove] # Cleanup Xcode macros
   interruptible: true
   tags:
     - vpn-ios-tests
@@ -84,13 +81,10 @@
     - if [ -z "$(ssh-keygen -F $CI_SERVER_HOST)" ]; then ssh-keyscan -H $CI_SERVER_HOST >> ~/.ssh/known_hosts; fi
     # Make sure xcode uses system ssh/git settings
     - defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
-    # Allow xcode macros
-    # - cat .gitlab/misc/macros.json
-    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
-    # - mkdir && cp .gitlab/misc/macros.json ~/Library/org.swift.swiftpm/security/macros.json
+    - !reference [.macros, add] # Allow predefined Xcode macros
   after_script:
     - ssh-add -D # Delete all ssh private keys
-    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
+    - !reference [.macros, remove] # Cleanup Xcode macros
   interruptible: true
 
 # Include this in artifacts part to take cobertura reports as artifacts
@@ -101,3 +95,12 @@
       path: fastlane/test_output/cobertura.xml
     junit:
       - fastlane/test_output/report.junit
+
+.macros:
+  add:
+    - cat .gitlab/misc/macros.json
+    - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
+    - mkdir -p ~/Library/org.swift.swiftpm/security/ || true 
+    - cp .gitlab/misc/macros.json ~/Library/org.swift.swiftpm/security/macros.json
+  remove:
+    - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
