@@ -25,7 +25,7 @@ variables:
 
 
 default:
-  image: "team-vpn"
+  image: "team-vpn-macos14.4.1-xcode15.0.1"
 
 workflow:
   rules:
