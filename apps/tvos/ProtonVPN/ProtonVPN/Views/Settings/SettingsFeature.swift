@@ -1,5 +1,5 @@
 //
-//  Created on 23/04/2024.
+//  Created on 25/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,20 +16,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
-import SwiftUI
+import ComposableArchitecture
 
-struct QRCodeView: View {
-    let string: String
-    var body: some View {
-        Image(uiImage: .generateQRCode(from: string))
-            .interpolation(.none)
-            .resizable()
-            .scaledToFit()
-            .frame(.square(466))
-            .clipRectangle(cornerRadius: .radius24)
+@Reducer
+struct SettingsFeature {
+    @ObservableState
+    struct State: Equatable {
+        var userName: String
     }
-}
 
-#Preview {
-    QRCodeView(string: "www.protonvpn.com/tv")
+    enum Action {
+        case signOut
+    }
+
+    var body: some Reducer<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case .signOut:
+                return .none
+            }
+        }
+    }
 }

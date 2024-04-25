@@ -1,5 +1,5 @@
 //
-//  Created on 05.04.24.
+//  Created on 25/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,18 +17,35 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import ComposableArchitecture
-import SwiftUI
 
-@main
-struct ProtonVPNApp: App {
-    @Bindable var store: StoreOf<AppFeature> = .init(initialState: AppFeature.State()) {
-        AppFeature()
+@Reducer
+struct MainFeature {
+
+    enum Tab { case home, search, settings }
+
+    @ObservableState
+    struct State: Equatable {
+        var currentTab: Tab
+        var settings: SettingsFeature.State
     }
 
-    var body: some Scene {
-        WindowGroup {
-            AppView(store: store)
+    enum Action {
+        case selectTab(Tab)
+        case settings(SettingsFeature.Action)
+    }
+
+    var body: some Reducer<State, Action> {
+        Scope(state: \.settings, action: \.settings) {
+            SettingsFeature()
+        }
+        Reduce { state, action in
+            switch action {
+            case .selectTab(let tab):
+                state.currentTab = tab
+                return .none
+            case .settings(_):
+                return .none
+            }
         }
     }
 }
-

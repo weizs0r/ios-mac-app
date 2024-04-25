@@ -1,5 +1,5 @@
 //
-//  Created on 23/04/2024.
+//  Created on 25/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -18,18 +18,29 @@
 
 import SwiftUI
 
-struct QRCodeView: View {
-    let string: String
-    var body: some View {
-        Image(uiImage: .generateQRCode(from: string))
-            .interpolation(.none)
-            .resizable()
-            .scaledToFit()
-            .frame(.square(466))
-            .clipRectangle(cornerRadius: .radius24)
-    }
-}
+import ComposableArchitecture
 
-#Preview {
-    QRCodeView(string: "www.protonvpn.com/tv")
+struct MainView: View {
+    
+    @Bindable var store: StoreOf<MainFeature>
+
+    var body: some View {
+        TabView(selection: $store.currentTab.sending(\.selectTab)) {
+            NavigationStack {
+                EmptyView()
+            }
+            .tag(MainFeature.Tab.home)
+            .tabItem { Text("Home") }
+            NavigationStack {
+                EmptyView()
+            }
+            .tag(MainFeature.Tab.search)
+            .tabItem { Text("Search") }
+            NavigationStack {
+                SettingsView(store: store.scope(state: \.settings, action: \.settings))
+            }
+            .tag(MainFeature.Tab.settings)
+            .tabItem { Text("Settings") }
+        }
+    }
 }
