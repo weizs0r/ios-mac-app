@@ -47,9 +47,7 @@ test:ui:bugreport:macos:
     - defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
     # Allow xcode macros
     - defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
-    # - cat .gitlab/misc/macros.json
-    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
-    # - mkdir && cp .gitlab/misc/macros.json ~/Library/org.swift.swiftpm/security/macros.json
+    - !reference [.macros, add] # Allow predefined Xcode macros
   script:
     - fastlane macos_bugreport_ui_test
     - scripts/print-coverage.sh fastlane/test_output/BugReportSampleMacOSApp.xcresult "BugReport " 1
@@ -59,7 +57,7 @@ test:ui:bugreport:macos:
     - rm -f ~/Library/MobileDevice/Provisioning\ Profiles/ProtonVPN_WireGuard_Development_PP.provisionprofile
     - fastlane delete_macos_keychain
     - ssh-add -D # Delete all ssh private keys
-    # - rm -f ~/Library/org.swift.swiftpm/security/macros.json || true
+    - !reference [.macros, remove] # Cleanup Xcode macros
   artifacts:
     reports:
       junit:
