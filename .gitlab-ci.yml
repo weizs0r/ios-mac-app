@@ -1,10 +1,10 @@
 stages:
-  - distribute
   - i18n
   - github
   - lint
   - deploy
   - build
+  - distribute
   - test
   - test_ui
   - cleanup
@@ -22,6 +22,9 @@ variables:
   # Default tart settings
   TART_EXECUTOR_ALWAYS_PULL: "false"
   TART_EXECUTOR_HEADLESS: "false"
+  # Nexus
+  NEXUS_GROUP: "/Vpn/IOS/Sli/Latest/Stable/"
+  NEXUS_REPO: "test-productivity-builds-distribution"
 
 
 default:
