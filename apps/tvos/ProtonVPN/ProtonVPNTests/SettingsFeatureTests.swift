@@ -1,5 +1,5 @@
 //
-//  Created on 25/04/2024.
+//  Created on 30/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,28 +16,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
+import XCTest
 import ComposableArchitecture
+@testable import ProtonVPN_TV
 
-@Reducer
-struct SettingsFeature {
-    @ObservableState
-    struct State: Equatable {
-        let userName: String
-        init(userName: String) {
-            self.userName = userName
+final class SettingsFeatureTests: XCTestCase {
+
+    @MainActor
+    func testBasics() async {
+        let store = TestStore(initialState: SettingsFeature.State(userName: "user")) {
+            SettingsFeature()
         }
-    }
-
-    enum Action {
-        case signOut
-    }
-
-    var body: some Reducer<State, Action> {
-        Reduce { state, action in
-            switch action {
-            case .signOut:
-                return .none
-            }
-        }
+        await store.send(.signOut)
     }
 }

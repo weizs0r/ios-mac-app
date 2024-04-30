@@ -1,5 +1,5 @@
 //
-//  Created on 25/04/2024.
+//  Created on 30/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -19,25 +19,15 @@
 import ComposableArchitecture
 
 @Reducer
-struct SettingsFeature {
+struct CreateAccountFeature {
     @ObservableState
-    struct State: Equatable {
-        let userName: String
-        init(userName: String) {
-            self.userName = userName
-        }
-    }
+    struct State: Equatable { }
 
-    enum Action {
-        case signOut
-    }
+    enum Action { }
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
-            switch action {
-            case .signOut:
-                return .none
-            }
+            return .none
         }
     }
 }

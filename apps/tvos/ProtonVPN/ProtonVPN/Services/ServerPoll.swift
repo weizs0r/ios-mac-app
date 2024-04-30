@@ -1,5 +1,5 @@
 //
-//  Created on 25/04/2024.
+//  Created on 30/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,28 +16,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
-import ComposableArchitecture
+import Foundation
 
-@Reducer
-struct SettingsFeature {
-    @ObservableState
-    struct State: Equatable {
-        let userName: String
-        init(userName: String) {
-            self.userName = userName
-        }
-    }
+struct ServerPollConfiguration: Equatable {
+    let delayBeforePollingStarts: Duration
+    let period: Duration
+    let failAfterAttempts: Int
 
-    enum Action {
-        case signOut
-    }
-
-    var body: some Reducer<State, Action> {
-        Reduce { state, action in
-            switch action {
-            case .signOut:
-                return .none
-            }
-        }
+    static let `default` = ServerPollConfiguration(delayBeforePollingStarts: .seconds(5),
+                                                   period: .seconds(1),
+                                                   failAfterAttempts: 5)
+    init(delayBeforePollingStarts: Duration, period: Duration, failAfterAttempts: Int) {
+        self.delayBeforePollingStarts = delayBeforePollingStarts
+        self.period = period
+        self.failAfterAttempts = failAfterAttempts
     }
 }
