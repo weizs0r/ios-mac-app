@@ -1,5 +1,5 @@
 //
-//  Created on 25/04/2024.
+//  Created on 30/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,38 +16,30 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
+import XCTest
 import ComposableArchitecture
+@testable import ProtonVPN_TV
 
-@Reducer
-struct AppFeature {
-    @ObservableState
-    struct State: Equatable {
-        var welcome = WelcomeFeature.State()
-        var main = MainFeature.State()
-
-        @Shared(.appStorage("username")) var user: String?
+final class AppFeatureTests: XCTestCase {
+    @MainActor
+    func testShowCreateAccount() async {
+        let state = AppFeature.State()
+        let store = TestStore(initialState: state) {
+            AppFeature()
+        }
+        await store.send(.welcome(.showCreateAccount)) {
+            $0.welcome.destination = .createAccount(.init())
+        }
     }
 
-    enum Action {
-        case main(MainFeature.Action)
-        case welcome(WelcomeFeature.Action)
-    }
-
-    var body: some Reducer<State, Action> {
-        Scope(state: \.welcome, action: \.welcome) {
-            WelcomeFeature()
+    @MainActor
+    func testTabSelection() async {
+        let state = AppFeature.State()
+        let store = TestStore(initialState: state) {
+            AppFeature()
         }
-        Scope(state: \.main, action: \.main) {
-            MainFeature()
-        }
-        Reduce { state, action in
-            switch action {
-            case .main:
-                return .none
-            case .welcome:
-                return .none
-            }
+        await store.send(.main(.selectTab(.search))) { state in
+            state.main.currentTab = .search
         }
     }
 }
-

@@ -1,5 +1,5 @@
 //
-//  Created on 05.04.24.
+//  Created on 30/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,19 +16,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
-import ComposableArchitecture
-import SwiftUI
+import Foundation
 
-@main
-struct ProtonVPNApp: App {
-    var store: StoreOf<AppFeature> = .init(initialState: AppFeature.State()) {
-        AppFeature()
-    }
+struct ServerPollConfiguration: Equatable {
+    let delayBeforePollingStarts: Duration
+    let period: Duration
+    let failAfterAttempts: Int
 
-    var body: some Scene {
-        WindowGroup {
-            AppView(store: store)
-        }
+    static let `default` = ServerPollConfiguration(delayBeforePollingStarts: .seconds(5),
+                                                   period: .seconds(1),
+                                                   failAfterAttempts: 5)
+    init(delayBeforePollingStarts: Duration, period: Duration, failAfterAttempts: Int) {
+        self.delayBeforePollingStarts = delayBeforePollingStarts
+        self.period = period
+        self.failAfterAttempts = failAfterAttempts
     }
 }
-

@@ -1,5 +1,5 @@
 //
-//  Created on 25/04/2024.
+//  Created on 30/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -19,35 +19,15 @@
 import ComposableArchitecture
 
 @Reducer
-struct AppFeature {
+struct CreateAccountFeature {
     @ObservableState
-    struct State: Equatable {
-        var welcome = WelcomeFeature.State()
-        var main = MainFeature.State()
+    struct State: Equatable { }
 
-        @Shared(.appStorage("username")) var user: String?
-    }
-
-    enum Action {
-        case main(MainFeature.Action)
-        case welcome(WelcomeFeature.Action)
-    }
+    enum Action { }
 
     var body: some Reducer<State, Action> {
-        Scope(state: \.welcome, action: \.welcome) {
-            WelcomeFeature()
-        }
-        Scope(state: \.main, action: \.main) {
-            MainFeature()
-        }
         Reduce { state, action in
-            switch action {
-            case .main:
-                return .none
-            case .welcome:
-                return .none
-            }
+            return .none
         }
     }
 }
-
