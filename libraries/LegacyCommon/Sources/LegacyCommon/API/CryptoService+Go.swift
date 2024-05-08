@@ -1,7 +1,7 @@
 //
-//  Created on 19.10.23.
+//  Created on 30/04/2024.
 //
-//  Copyright (c) 2023 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,19 +17,17 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-import Strings
-import ProtonCoreNetworking
-import CommonNetworking
 
-#if DEBUG
+import GoLibs
 
-public extension ResponseError {
-    static let unknownError: Self = .init(
-        httpCode: HttpStatusCode.internalServerError.rawValue,
-        responseCode: ApiErrorCode.apiOffline,
-        userFacingMessage: Localizable.errorInternalError,
-        underlyingError: nil
-    )
+import Dependencies
+
+import struct CommonNetworking.CryptoService
+
+extension CryptoService: DependencyKey {
+    public static var liveValue: CryptoService {
+        return CryptoService(updateTime: { serverTime in
+            CryptoUpdateTime(serverTime)
+        })
+    }
 }
-
-#endif

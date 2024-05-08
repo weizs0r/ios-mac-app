@@ -1,7 +1,7 @@
 //
-//  Created on 19.10.23.
+//  Created on 22/04/2024.
 //
-//  Copyright (c) 2023 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,19 +17,16 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-import Strings
-import ProtonCoreNetworking
-import CommonNetworking
 
-#if DEBUG
+public enum HttpStatusCode: Int { // http status codes returned by the api
 
-public extension ResponseError {
-    static let unknownError: Self = .init(
-        httpCode: HttpStatusCode.internalServerError.rawValue,
-        responseCode: ApiErrorCode.apiOffline,
-        userFacingMessage: Localizable.errorInternalError,
-        underlyingError: nil
-    )
+    case notModified = 304
+
+    case badRequest = 400
+    case invalidAccessToken = 401
+    case accessForbidden = 403
+    case invalidRefreshToken = 422
+    case tooManyRequests = 429
+    case internalServerError = 500
+    case serviceUnavailable = 503
 }
-
-#endif
