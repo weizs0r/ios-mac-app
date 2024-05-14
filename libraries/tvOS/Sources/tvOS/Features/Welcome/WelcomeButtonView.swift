@@ -1,5 +1,5 @@
 //
-//  Created on 08/05/2024.
+//  Created on 22/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -18,43 +18,35 @@
 
 import SwiftUI
 
-struct SettingsCellView: View {
+struct WelcomeButtonView: View {
 
     let title: String
-    let icon: Image
     let action: () -> Void
 
     @FocusState var focusState: Bool
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: .themeSpacing32) {
-                icon
-                    .resizable()
-                    .frame(.square(48))
-                Text(title)
-                    .font(.callout)
-                Spacer()
-            }
+            Text(title)
+                .font(.body)
+                .fontWeight(.bold)
         }
         .focused($focusState, equals: true)
-        .buttonStyle(SettingsButtonStyle())
+        .buttonStyle(WelcomeButtonStyle())
     }
 }
 
-private struct SettingsButtonStyle: ButtonStyle {
-
-    private static let size = CGSize(width: 800, height: 120)
+private struct WelcomeButtonStyle: ButtonStyle {
 
     @Environment(\.isFocused) var isFocused
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.leading, .themeSpacing48)
-            .frame(width: Self.size.width, height: Self.size.height)
-            .background(isFocused ? Color(.background, .hovered) : Color(.background))
+            .padding(.horizontal, .themeSpacing32)
+            .padding(.vertical, .themeSpacing24)
+            .background(isFocused ? Color(.background, .hovered) : Color(.background, .weak))
             .foregroundStyle(isFocused ? Color(.text, .inverted) : Color(.text))
-            .cornerRadius(.themeRadius24)
+            .cornerRadius(.themeRadius16)
             .hoverEffect(.highlight)
     }
 }
