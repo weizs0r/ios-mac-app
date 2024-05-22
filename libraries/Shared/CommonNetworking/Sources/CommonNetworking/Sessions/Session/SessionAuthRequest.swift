@@ -1,5 +1,5 @@
 //
-//  Created on 30/04/2024.
+//  Created on 01/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,18 +17,18 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-import Dependencies
+import ProtonCoreNetworking
 
-struct ServerPollConfiguration: DependencyKey {
-    let delayBeforePollingStarts: Duration
-    let period: Duration
-    let failAfterAttempts: Int
+public struct SessionAuthRequest: Request {
+    let selector: String
 
-    static let liveValue: ServerPollConfiguration = ServerPollConfiguration(
-        delayBeforePollingStarts: .seconds(5),
-        period: .seconds(5),
-        failAfterAttempts: 60 // ~5 minutes of polling every 5s (disregarding time to complete each request)
-    )
+    public init(selector: String) {
+        self.selector = selector
+    }
 
-    static let testValue = liveValue
+    public var path: String {
+        return "/auth/v4/sessions/forks/\(selector)"
+    }
+
+    public var method: HTTPMethod { .get }
 }

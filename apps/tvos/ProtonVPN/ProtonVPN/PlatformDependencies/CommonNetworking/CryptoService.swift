@@ -1,5 +1,5 @@
 //
-//  Created on 30/04/2024.
+//  Created on 02/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,18 +17,16 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
+
 import Dependencies
 
-struct ServerPollConfiguration: DependencyKey {
-    let delayBeforePollingStarts: Duration
-    let period: Duration
-    let failAfterAttempts: Int
+import CommonNetworking
 
-    static let liveValue: ServerPollConfiguration = ServerPollConfiguration(
-        delayBeforePollingStarts: .seconds(5),
-        period: .seconds(5),
-        failAfterAttempts: 60 // ~5 minutes of polling every 5s (disregarding time to complete each request)
-    )
-
-    static let testValue = liveValue
+extension CryptoService: DependencyKey {
+    public static var liveValue: CryptoService {
+        .init(updateTime: { serverTime in
+            // VPNAPPL-2170: pull in implementation based on GoLibs from LegacyCommon
+            print("Server time: \(Date(timeIntervalSince1970: TimeInterval(serverTime)))")
+        })
+    }
 }

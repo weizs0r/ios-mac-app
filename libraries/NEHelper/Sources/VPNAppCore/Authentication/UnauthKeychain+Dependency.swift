@@ -1,5 +1,5 @@
 //
-//  Created on 30/04/2024.
+//  Created on 02/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -19,16 +19,15 @@
 import Foundation
 import Dependencies
 
-struct ServerPollConfiguration: DependencyKey {
-    let delayBeforePollingStarts: Duration
-    let period: Duration
-    let failAfterAttempts: Int
-
-    static let liveValue: ServerPollConfiguration = ServerPollConfiguration(
-        delayBeforePollingStarts: .seconds(5),
-        period: .seconds(5),
-        failAfterAttempts: 60 // ~5 minutes of polling every 5s (disregarding time to complete each request)
-    )
-
-    static let testValue = liveValue
+public struct UnauthKeychainHandleDependencyKey: DependencyKey {
+    public static let liveValue: UnauthKeychainHandle = UnauthKeychain.default
+    public static let testValue = liveValue
 }
+
+extension DependencyValues {
+    public var unauthKeychain: UnauthKeychainHandle {
+        get { self[UnauthKeychainHandleDependencyKey.self] }
+        set { self[UnauthKeychainHandleDependencyKey.self] = newValue }
+    }
+}
+
