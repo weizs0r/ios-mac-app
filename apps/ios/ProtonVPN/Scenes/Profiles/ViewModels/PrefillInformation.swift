@@ -1,5 +1,5 @@
 //
-//  ConnectionViewModel.swift
+//  PrefillInformation.swift
 //  ProtonVPN - Created on 01.07.19.
 //
 //  Copyright (c) 2019 Proton Technologies AG
@@ -20,23 +20,21 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-import Foundation
-import MapKit
+import UIKit
 
-struct ConnectionViewModel {
+class PrefillInformation {
     
-    enum State {
-        case connected
-        case proposed
-    }
+    let name: String
+    let color: UIColor
+    let usesSecureCore: Bool
+    let countryIndex: Int
+    let serverIndex: Int
     
-    let lineWidth: CGFloat = 2
-    
-    let state: State
-    let connection: (entry: AnnotationViewModel, exit: AnnotationViewModel)
-    
-    init(_ state: State, between entry: AnnotationViewModel, and exit: AnnotationViewModel) {
-        self.state = state
-        self.connection = (entry, exit)
+    init(name: String, color: UIColor, usesSecureCore: Bool, countryIndex: Int, serverIndex: Int) {
+        self.name = name
+        self.color = color
+        self.usesSecureCore = usesSecureCore
+        self.countryIndex = countryIndex
+        self.serverIndex = serverIndex
     }
 }
