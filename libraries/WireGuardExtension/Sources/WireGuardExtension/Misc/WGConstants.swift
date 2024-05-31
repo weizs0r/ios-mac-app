@@ -1,5 +1,5 @@
 //
-//  Created on 05.04.24.
+//  Created on 17/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,8 +16,24 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
-import WireGuardExtension
+import Foundation
 
-final class PacketTunnelProvider: WireGuardPacketTunnelProvider {
-    // we define the packet tunnel here as a subclass of WireGuardPacketTunnelProvide
+enum AppGroups {
+    static let main = "group.ch.protonmail.vpn"
+}
+
+enum WGConstants {
+    static let keychainAccessGroup: String = "\(Self.appIdentifierPrefix)prt.ProtonVPN"
+
+    static var appIdentifierPrefix: String {
+        return Bundle.main.infoDictionary!["AppIdentifierPrefix"] as! String
+    }
+
+    static var appGroupId: String {
+        #if os(tvOS)
+        return AppGroups.main
+        #else
+        #error("Unimplemented")
+        #endif
+    }
 }
