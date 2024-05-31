@@ -1,5 +1,5 @@
 //
-//  Created on 28/05/2024.
+//  Created on 30/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,12 +17,7 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
+import Domain
 
-enum Constants {
-    static let maxPreferredContentViewWidth: CGFloat = 800
-
-    enum Time {
-        /// Servers list refresh
-        static let fullServerRefresh: TimeInterval = .hours(3)
-    }
-}
+// Lets have this just to be consistent with all the API requests/responses
+typealias LocationResponse = UserLocation

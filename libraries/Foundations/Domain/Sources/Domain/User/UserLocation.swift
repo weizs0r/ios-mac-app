@@ -1,5 +1,5 @@
 //
-//  Created on 28/05/2024.
+//  Created on 30/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -18,11 +18,20 @@
 
 import Foundation
 
-enum Constants {
-    static let maxPreferredContentViewWidth: CGFloat = 800
+public struct UserLocation: Codable {
+    public let ip: String
+    public let country: String
+    public let isp: String
 
-    enum Time {
-        /// Servers list refresh
-        static let fullServerRefresh: TimeInterval = .hours(3)
+    public init(ip: String, country: String, isp: String) {
+        self.ip = ip
+        self.country = country
+        self.isp = isp
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case ip = "IP"
+        case country
+        case isp = "ISP"
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Created on 28/05/2024.
+//  Created on 30/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,13 +16,14 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
-import Foundation
+import Domain
 
-enum Constants {
-    static let maxPreferredContentViewWidth: CGFloat = 800
-
-    enum Time {
-        /// Servers list refresh
-        static let fullServerRefresh: TimeInterval = .hours(3)
+extension Domain.UserLocation {
+    public init(dic: JSONDictionary) throws {
+        self.init(
+            ip: try dic.stringOrThrow(key: "IP"),
+            country: try dic.stringOrThrow(key: "Country"),
+            isp: try dic.stringOrThrow(key: "ISP")
+        )
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Created on 28/05/2024.
+//  Created on 30/05/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,12 +17,21 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
+import ProtonCoreNetworking
 
-enum Constants {
-    static let maxPreferredContentViewWidth: CGFloat = 800
+final public class LocationRequest: Request {
+    public var path: String {
+        return "/vpn/v1/location"
+    }
 
-    enum Time {
-        /// Servers list refresh
-        static let fullServerRefresh: TimeInterval = .hours(3)
+    public var isAuth: Bool {
+        return false
+    }
+
+    public var retryPolicy: ProtonRetryPolicy.RetryMode {
+        .userInitiated
+    }
+
+    public init() {
     }
 }
