@@ -1,5 +1,5 @@
 //
-//  Created on 25/04/2024.
+//  Created on 04/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,41 +17,38 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import ComposableArchitecture
+import SwiftUI
+import ProtonCoreUIFoundations
+import Strings
+import Domain
 
 @Reducer
-struct MainFeature {
-
-    enum Tab { case home, search, settings }
-
+struct ProtectionStatusFeature {
     @ObservableState
     struct State: Equatable {
-        var currentTab: Tab = .home
-        var home = HomeFeature.State()
-        var settings = SettingsFeature.State()
+
+        @Shared(.inMemory("connectionState")) var connectionState: ConnectFeature.ConnectionState?
+        @Shared(.inMemory("userLocation")) var userLocation: UserLocation?
     }
 
     enum Action {
-        case selectTab(Tab)
-        case home(HomeFeature.Action)
-        case settings(SettingsFeature.Action)
+        case userTappedButton
+        case onAppear
+        case connectionStateUpdated(ConnectFeature.ConnectionState?)
     }
 
     var body: some Reducer<State, Action> {
-        Scope(state: \.home, action: \.home) {
-            HomeFeature()
-        }
-        Scope(state: \.settings, action: \.settings) {
-            SettingsFeature()
-        }
         Reduce { state, action in
             switch action {
-            case .selectTab(let tab):
-                state.currentTab = tab
+            case .userTappedButton:
                 return .none
-            case .settings:
+            case .connectionStateUpdated:
                 return .none
-            case .home:
-                return .none
+            case .onAppear:
+                return .run { send in
+                    @Dependency(\.userLocationService) var userLocationService
+                    try? await userLocationService.updateUserLocation()
+                }
             }
         }
     }
