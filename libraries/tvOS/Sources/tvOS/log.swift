@@ -1,5 +1,5 @@
 //
-//  Created on 09/06/2024.
+//  Created on 10/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,20 +17,6 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-import Localization
+import Logging
 
-struct CountryListItem: Identifiable, Equatable, Hashable {
-    var id: String
-    let section: Int
-    let row: Int
-    let code: String
-    var name: String {
-        LocalizationUtility.default.countryName(forCode: code) ?? code
-    }
-    init(section: Int, row: Int, code: String) {
-        self.id = "\(section)" + code
-        self.section = section
-        self.row = row
-        self.code = code
-    }
-}
+let log: Logging.Logger = Logging.Logger(label: "ProtonVPN.tvOS.logger")
