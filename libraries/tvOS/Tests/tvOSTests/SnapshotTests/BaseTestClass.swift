@@ -17,23 +17,20 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import XCTest
+import SwiftUI
 import SnapshotTesting
 import ComposableArchitecture
 @testable import tvOS
 
-final class CodeExpiredFeatureSnapshotTests: BaseTestClass {
+
+class BaseTestClass: XCTestCase {
+
+    // Traits for light and dark mode
+    let traitDarkMode = UITraitCollection(userInterfaceStyle: .dark)
+    let traitLightMode = UITraitCollection(userInterfaceStyle: .light)
 
     override func setUp() {
         super.setUp()
+        isRecording = false
     }
-        
-    func testCodeExpiredView() {
-        let store = Store(initialState: CodeExpiredFeature.State()) {
-            CodeExpiredFeature()
-        } 
-        let codeExpiredView = CodeExpiredView(store: store)
-            .frame(.rect(width: 1920, height: 1080))
-
-        assertSnapshot(of: codeExpiredView, as: .image(traits: traitDarkMode))
-      }
 }

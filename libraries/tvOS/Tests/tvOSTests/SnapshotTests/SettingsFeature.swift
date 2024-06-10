@@ -21,19 +21,19 @@ import SnapshotTesting
 import ComposableArchitecture
 @testable import tvOS
 
-final class CodeExpiredFeatureSnapshotTests: BaseTestClass {
-
+class SettingsFeatureSnapshotTests: BaseTestClass {
+    
     override func setUp() {
         super.setUp()
     }
         
-    func testCodeExpiredView() {
-        let store = Store(initialState: CodeExpiredFeature.State()) {
-            CodeExpiredFeature()
-        } 
-        let codeExpiredView = CodeExpiredView(store: store)
+    func testSettingsView() {
+        let store = Store(initialState: SettingsFeature.State()) {
+            SettingsFeature()
+        }
+        let settingsView = SettingsView(store: store)
             .frame(.rect(width: 1920, height: 1080))
 
-        assertSnapshot(of: codeExpiredView, as: .image(traits: traitDarkMode))
+        assertSnapshot(of: settingsView, as: .image(traits: traitDarkMode))
       }
 }
