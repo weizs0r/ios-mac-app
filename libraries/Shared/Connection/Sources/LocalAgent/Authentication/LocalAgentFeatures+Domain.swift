@@ -1,7 +1,7 @@
 //
-//  Created on 07.02.2022.
+//  Created on 04/06/2024.
 //
-//  Copyright (c) 2022 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,23 +17,14 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
+import class GoLibs.LocalAgentFeatures
+import Domain
 
-public enum NATType: Int, Codable, CaseIterable, Sendable {
-    case strictNAT
-    case moderateNAT
-
-    public init(flag: Bool) {
-        self = flag ? .strictNAT : .moderateNAT
-    }
-
-    public var flag: Bool {
-        switch self {
-        case .strictNAT:
-            return true
-        case .moderateNAT:
-            return false
-        }
-    }
-
-    public static let `default`: NATType = .strictNAT
+enum LocalAgentFeaturesKeys: String {
+    case vpnAccelerator = "split-tcp"
+    case netShield = "netshield-level"
+    case jailed = "jail"
+    case natType = "randomized-nat"
+    case bouncing
+    case safeMode = "safe-mode"
 }
