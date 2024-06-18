@@ -1,7 +1,7 @@
 //
-//  Created on 07.02.2022.
+//  Created on 12/06/2024.
 //
-//  Copyright (c) 2022 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,22 +18,13 @@
 
 import Foundation
 
-public enum NATType: Int, Codable, CaseIterable, Sendable {
-    case strictNAT
-    case moderateNAT
+/// Contains information required to identify the server and logical that the extension is currently connected to
+public struct LogicalServerInfo: Equatable, Sendable {
+    public let logicalID: String
+    public let serverID: String
 
-    public init(flag: Bool) {
-        self = flag ? .strictNAT : .moderateNAT
+    public init(logicalID: String, serverID: String) {
+        self.logicalID = logicalID
+        self.serverID = serverID
     }
-
-    public var flag: Bool {
-        switch self {
-        case .strictNAT:
-            return true
-        case .moderateNAT:
-            return false
-        }
-    }
-
-    public static let `default`: NATType = .strictNAT
 }

@@ -1,7 +1,7 @@
 //
-//  Created on 07.02.2022.
+//  Created on 13/06/2024.
 //
-//  Copyright (c) 2022 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,22 +18,22 @@
 
 import Foundation
 
-public enum NATType: Int, Codable, CaseIterable, Sendable {
-    case strictNAT
-    case moderateNAT
+public struct VPNAuthenticationData {
+    public let clientKey: PrivateKey
+    public let clientCertificate: String
 
-    public init(flag: Bool) {
-        self = flag ? .strictNAT : .moderateNAT
+    public init(clientKey: PrivateKey, clientCertificate: String) {
+        self.clientKey = clientKey
+        self.clientCertificate = clientCertificate
     }
-
-    public var flag: Bool {
-        switch self {
-        case .strictNAT:
-            return true
-        case .moderateNAT:
-            return false
-        }
-    }
-
-    public static let `default`: NATType = .strictNAT
 }
+
+#if DEBUG
+// Can be moved to a separate target if there are more things we'd like mocks of in the future
+extension VPNAuthenticationData {
+    public static let empty = VPNAuthenticationData(
+        clientKey: .init(rawRepresentation: [], derRepresentation: "", base64X25519Representation: ""),
+        clientCertificate: ""
+    )
+}
+#endif

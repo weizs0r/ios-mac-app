@@ -1,7 +1,7 @@
 //
-//  Created on 07.02.2022.
+//  Created on 13/06/2024.
 //
-//  Copyright (c) 2022 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,23 +17,21 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
+import class GoLibs.LocalAgentAgentConnection
+import class GoLibs.LocalAgentStatusMessage
+import class GoLibs.LocalAgentFeatures
 
-public enum NATType: Int, Codable, CaseIterable, Sendable {
-    case strictNAT
-    case moderateNAT
+protocol LocalAgentConnection {
+    var currentState: LocalAgentState { get }
+    var status: LocalAgentStatusMessage? { get }
+    func close()
+    func setConnectivity(_: Bool)
+    func setFeatures(_: LocalAgentFeatures?)
+    func sendGetStatus(_: Bool)
+}
 
-    public init(flag: Bool) {
-        self = flag ? .strictNAT : .moderateNAT
+extension LocalAgentAgentConnection: LocalAgentConnection {
+    var currentState: LocalAgentState {
+        LocalAgentState.from(string: state)
     }
-
-    public var flag: Bool {
-        switch self {
-        case .strictNAT:
-            return true
-        case .moderateNAT:
-            return false
-        }
-    }
-
-    public static let `default`: NATType = .strictNAT
 }
