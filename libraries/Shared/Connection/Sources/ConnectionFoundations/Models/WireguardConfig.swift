@@ -21,10 +21,9 @@
 //
 
 import Foundation
-import VPNShared
 import Ergonomics
 
-public struct WireguardConfig: Codable, Equatable, DefaultableProperty {
+public struct WireguardConfig: Codable, Equatable {
     public let defaultUdpPorts: [Int]
     public let defaultTcpPorts: [Int]
     public let defaultTlsPorts: [Int]
@@ -74,15 +73,36 @@ public struct StoredWireguardConfig: Codable {
 
     let timestamp: Date
 
-    public func withNewServerPublicKey(_ newServerPublicKey: String?,
-                                       andEntryServerAddress newEntryServerAddress: String) -> Self {
-        Self(wireguardConfig: wireguardConfig,
-             clientPrivateKey: clientPrivateKey,
-             serverPublicKey: newServerPublicKey,
-             entryServerAddress: newEntryServerAddress,
-             ports: ports,
-             // update the timestamp since the configuration has changed
-             timestamp: Date())
+    public init(
+        wireguardConfig: WireguardConfig,
+        clientPrivateKey: String?,
+        serverPublicKey: String?,
+        entryServerAddress: String,
+        ports: [Int],
+        timestamp: Date
+    ) {
+        precondition(!ports.isEmpty, "Ports should not be empty")
+        self.wireguardConfig = wireguardConfig
+        self.clientPrivateKey = clientPrivateKey
+        self.serverPublicKey = serverPublicKey
+        self.entryServerAddress = entryServerAddress
+        self.ports = ports
+        self.timestamp = timestamp
+    }
+
+    public func withNewServerPublicKey(
+        _ newServerPublicKey: String,
+        andEntryServerAddress newEntryServerAddress: String
+    ) -> Self {
+        Self(
+            wireguardConfig: wireguardConfig,
+            clientPrivateKey: clientPrivateKey,
+            serverPublicKey: newServerPublicKey,
+            entryServerAddress: newEntryServerAddress,
+            ports: ports,
+            // update the timestamp since the configuration has changed
+            timestamp: .now
+        )
     }
 }
 
@@ -92,30 +112,27 @@ extension StoredWireguardConfig {
     /// `asWireguardConfiguration` translates this object into a text configuration file
     /// that the `wireguard-go` backend understands.
     public func asWireguardConfiguration() -> String {
-        var output = "[Interface]\n"
+        return """
+            [Interface]
+            \(attribute: "PrivateKey = ", optional: clientPrivateKey)
+            Address = \(wireguardConfig.address)
+            DNS = \(wireguardConfig.dns)
 
-        if let clientPrivateKey = clientPrivateKey {
-            output.append("PrivateKey = \(clientPrivateKey)\n")
+            [Peer]
+            \(attribute: "PublicKey = ", optional: serverPublicKey)
+            AllowedIPs = \(wireguardConfig.allowedIPs)
+            Endpoint = \(entryServerAddress):\(ports.first!)
+            \(attribute: "PersistentKeepalive = ", optional: wireguardConfig.persistentKeepalive)
+            """
+    }
+}
+
+private extension DefaultStringInterpolation {
+    mutating func appendInterpolation<T>(attribute: String, optional: T?) {
+        guard let optional else {
+            return
         }
-        output.append("Address = \(wireguardConfig.address)\n")
-        output.append("DNS = \(wireguardConfig.dns)\n")
-
-        output.append("\n[Peer]\n")
-        if let serverPublicKey = serverPublicKey {
-            output.append("PublicKey = \(serverPublicKey)\n")
-        }
-        output.append("AllowedIPs = \(wireguardConfig.allowedIPs)\n")
-
-        // VPNAPPL-1447 - find out why the wireguard-go backend is improperly parsing the
-        // IPv4 address from the config
-        let endpointLine = "Endpoint = \(entryServerAddress):\(ports.first!)\n"
-        log.info("WireGuard \(endpointLine)")
-
-        output.append(endpointLine)
-        if let persistentKeepalive = wireguardConfig.persistentKeepalive {
-            output.append("PersistentKeepalive = \(persistentKeepalive)")
-        }
-
-        return output
+        appendInterpolation(attribute)
+        appendInterpolation(optional)
     }
 }

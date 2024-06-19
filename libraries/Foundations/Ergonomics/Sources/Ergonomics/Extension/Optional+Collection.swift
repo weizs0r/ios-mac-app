@@ -1,7 +1,7 @@
 //
-//  Created on 09/08/2023.
+//  Created on 20/06/2024.
 //
-//  Copyright (c) 2023 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,21 +16,14 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
-import Foundation
-import Dependencies
-import VPNShared
-
-// MARK: Live implementations of dependencies required by the MacOS app AND its extensions
-
-extension DefaultsProvider: DependencyKey {
-    public static var liveValue: DefaultsProvider = DefaultsProvider(
-        getDefaults: { UserDefaults.standard }
-    )
-}
-
-extension VPNAuthenticationStorageConfigKey: DependencyKey {
-    public static let liveValue: String = {
-        let accessGroup = Bundle.main.infoDictionary!["AppIdentifierPrefix"] as! String
-        return "\(accessGroup)prt.ProtonVPN"
-    }()
+extension Optional where Wrapped: Collection {
+    /// Return default value in case the collection is nil or empty
+    /// - Parameter defaultValue: the default value you want to assign to the receiver if it is nil or empty.
+    /// - Returns: the receiver if it is not nil and non empty, otherwise the provided default value.
+    public func unwrappedOr(defaultValue: @autoclosure () -> Wrapped) -> Wrapped {
+        guard let `self` = self, !self.isEmpty else {
+            return defaultValue()
+        }
+        return self
+    }
 }
