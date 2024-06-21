@@ -1,5 +1,5 @@
 //
-//  Created on 04/06/2024.
+//  Created on 20/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,19 +17,31 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-import NetworkExtension
 import Dependencies
-import protocol ExtensionIPC.ProviderRequest
-import enum ExtensionIPC.ProviderMessageError
-import ConnectionFoundations
 
-extension TunnelMessageSender: DependencyKey {
-    public static let liveValue: TunnelMessageSender = {
-        @Dependency(\.tunnelManager) var tunnelManager
-        return TunnelMessageSender(
-            send: { message in
-                try await tunnelManager.session.send(message)
-            }
+public struct SessionService: TestDependencyKey {
+    public var selector: () async throws -> String
+    public var sessionCookie: () -> HTTPCookie?
+
+    public init(
+        selector: @escaping () async throws -> String,
+        sessionCookie: @escaping () -> HTTPCookie?
+    ) {
+        self.selector = selector
+        self.sessionCookie = sessionCookie
+    }
+
+    public static let testValue: SessionService = {
+        return SessionService(
+            selector: unimplemented(),
+            sessionCookie: unimplemented()
         )
     }()
+}
+
+extension DependencyValues {
+    public var sessionService: SessionService {
+      get { self[SessionService.self] }
+      set { self[SessionService.self] = newValue }
+    }
 }

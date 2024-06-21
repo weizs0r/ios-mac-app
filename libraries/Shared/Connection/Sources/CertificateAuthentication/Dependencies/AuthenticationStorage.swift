@@ -1,5 +1,5 @@
 //
-//  Created on 14/06/2024.
+//  Created on 20/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,22 +17,27 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-import struct VPNShared.VpnCertificate
+import Dependencies
+import ConnectionFoundations
+import protocol VPNShared.VpnAuthenticationStorageSync
 
-public struct FullAuthenticationData: Equatable, Sendable {
-    public let keys: VPNKeys
-    public let certificate: VpnCertificate
+extension VpnAuthenticationStorageSync {
+    public func loadAuthenticationData() -> CertificateLoadingResult {
+        guard let keys = getStoredKeys() else {
+            return .keysMissing
+        }
+        guard let certificate = getStoredCertificate() else {
+            return .certificateMissing
+        }
 
-    public init(keys: VPNKeys, certificate: VpnCertificate) {
-        self.keys = keys
-        self.certificate = certificate
-    }
+        @Dependency(\.date) var date
+        if date.now > certificate.refreshTime {
+            return .certificateExpired
+        }
 
-    /// Returns a subset of data necessary to authenticate a LocalAgent connection
-    public var authenticationData: VPNAuthenticationData {
-        return VPNAuthenticationData(
-            clientKey: keys.privateKey,
-            clientCertificate: certificate.certificate
-        )
+        return .loaded(FullAuthenticationData(
+            keys: .init(fromLegacyKeys: keys),
+            certificate: certificate
+        ))
     }
 }
