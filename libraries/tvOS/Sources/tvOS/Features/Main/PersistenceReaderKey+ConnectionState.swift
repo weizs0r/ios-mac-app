@@ -1,5 +1,5 @@
 //
-//  Created on 04/06/2024.
+//  Created on 19/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,22 +17,10 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import ComposableArchitecture
-import SwiftUI
+import Connection
 
-struct HomeView: View {
-
-    @Bindable var store: StoreOf<HomeFeature>
-
-    private static let contentAllowedWidth: Double = 1460
-
-    var body: some View {
-        ScrollView {
-            ProtectionStatusView(store: store.scope(state: \.protectionStatus, action: \.protectionStatus))
-                .frame(width: Self.contentAllowedWidth)
-            CountryListView(store: store.scope(state: \.countryList, action: \.countryList),
-                            contentAllowedWidth: Self.contentAllowedWidth)
-        }
-        .scrollClipDisabled()
-        .frame(width: Self.contentAllowedWidth)
-    }
+public extension PersistenceReaderKey where Self == InMemoryKey<ConnectionState?> {
+    static var connectionState: Self {
+    inMemory("connectionState")
+  }
 }

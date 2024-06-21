@@ -1,5 +1,5 @@
 //
-//  Created on 04/06/2024.
+//  Created on 19/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,29 +16,31 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
+import ComposableArchitecture
 import Foundation
-import NetworkExtension
-import Dependencies
-import protocol ExtensionIPC.ProviderRequest
-import enum ExtensionIPC.ProviderMessageError
+import Domain
 
-extension VPNSession {
-
-    private var defaultMaxRetries: Int { 5 }
-
-    public func send<R: ProviderRequest>(
-        _ message: R,
-        completion: ((Result<R.Response, ProviderMessageError>) -> Void)?
-    ) {
-        send(message, maxRetries: defaultMaxRetries, completion: completion)
+extension PersistenceReaderKey where Self == AppStorageKey<String?> {
+    static var userDisplayName: Self {
+        appStorage("userDisplayName")
     }
+}
 
-    private func send<R: ProviderRequest>(
-        _ message: R,
-        maxRetries: Int,
-        completion: ((Result<R.Response, ProviderMessageError>) -> Void)?
-    )  {
-        // TODO: Retry failed messages sensibly
-        fatalError("Remember to fix this!!!")
+extension PersistenceReaderKey where Self == AppStorageKey<Int?> {
+    static var userTier: Self {
+        appStorage("userTier")
+    }
+}
+
+extension PersistenceReaderKey where Self == AppStorageKey<TimeInterval> {
+    static var lastLogicalsRefresh: Self {
+        appStorage("lastLogicalsRefresh")
+    }
+}
+
+
+public extension PersistenceReaderKey where Self == InMemoryKey<UserLocation?> {
+    static var userLocation: Self {
+        inMemory("userLocation")
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Created on 04/06/2024.
+//  Created on 20/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,23 +16,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
+import XCTest
 import ComposableArchitecture
-import SwiftUI
+@testable import tvOS
+import Connection
 
-struct HomeView: View {
+final class ProtectionStatusFeatureTests: XCTestCase {
 
-    @Bindable var store: StoreOf<HomeFeature>
-
-    private static let contentAllowedWidth: Double = 1460
-
-    var body: some View {
-        ScrollView {
-            ProtectionStatusView(store: store.scope(state: \.protectionStatus, action: \.protectionStatus))
-                .frame(width: Self.contentAllowedWidth)
-            CountryListView(store: store.scope(state: \.countryList, action: \.countryList),
-                            contentAllowedWidth: Self.contentAllowedWidth)
+    @MainActor
+    func testUserTappedButton() async {
+        let store = TestStore(initialState: ProtectionStatusFeature.State()) {
+            ProtectionStatusFeature()
         }
-        .scrollClipDisabled()
-        .frame(width: Self.contentAllowedWidth)
+        @Shared(.connectionState) var connectionState: ConnectionState?
+        connectionState = .disconnected(nil)
+        await store.send(.userTappedButton)
+        await store.receive(\.userClickedConnect)
     }
 }
