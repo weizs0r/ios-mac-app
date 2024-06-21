@@ -10,6 +10,7 @@
 		<string>webcredentials:account.protonmail.com</string>
 		<string>webcredentials:account.protonvpn.com</string>
 		<string>webcredentials:proton.me</string>
+		<string>webcredentials:proton.black?mode=developer</string>
 	</array>
 	<key>com.apple.developer.networking.networkextension</key>
 	<array>
