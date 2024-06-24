@@ -1,7 +1,7 @@
 //
-//  Created on 09/08/2023.
+//  Created on 05/06/2024.
 //
-//  Copyright (c) 2023 Proton AG
+//  Copyright (c) 2024 Proton AG
 //
 //  ProtonVPN is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,20 +17,8 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-import struct VPNShared.DefaultsProvider
-import enum VPNShared.VPNAuthenticationStorageConfigKey
 import Dependencies
-
-// MARK: Live implementations of dependencies required by the iOS app AND its extensions
-
-extension DefaultsProvider: DependencyKey {
-    public static var liveValue: DefaultsProvider = DefaultsProvider(
-        getDefaults: {
-            // Use shared defaults
-            UserDefaults(suiteName: AppConstants.AppGroups.main)!
-        }
-    )
-}
+import enum VPNShared.VPNAuthenticationStorageConfigKey
 
 extension VPNAuthenticationStorageConfigKey: DependencyKey {
     public static let liveValue: String = {
