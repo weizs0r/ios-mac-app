@@ -1,5 +1,5 @@
 //
-//  Created on 14/06/2024.
+//  Created on 22/04/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,22 +17,20 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
-import struct VPNShared.VpnCertificate
 
-public struct FullAuthenticationData: Equatable, Sendable {
-    public let keys: VPNKeys
-    public let certificate: VpnCertificate
+public enum HttpStatusCode: Int { // http status codes returned by the api
 
-    public init(keys: VPNKeys, certificate: VpnCertificate) {
-        self.keys = keys
-        self.certificate = certificate
-    }
+    case notModified = 304
 
-    /// Returns a subset of data necessary to authenticate a LocalAgent connection
-    public var authenticationData: VPNAuthenticationData {
-        return VPNAuthenticationData(
-            clientKey: keys.privateKey,
-            clientCertificate: certificate.certificate
-        )
-    }
+    case badRequest = 400
+    case invalidAccessToken = 401
+    case accessForbidden = 403
+    case invalidRefreshToken = 422
+    case tooManyRequests = 429
+    case internalServerError = 500
+    case serviceUnavailable = 503
+}
+
+public enum Constants {
+    public static let sessionIDCookieName = "Session-Id"
 }

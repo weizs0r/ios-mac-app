@@ -1,5 +1,5 @@
 //
-//  Created on 14/06/2024.
+//  Created on 20/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -18,25 +18,26 @@
 
 import Foundation
 import Dependencies
+import ConnectionFoundations
+import protocol VPNShared.VpnAuthenticationStorageSync
 
-import enum ExtensionIPC.WireguardProviderRequest
-import enum ExtensionIPC.ProviderMessageError
+extension VpnAuthenticationStorageSync {
+    public func loadAuthenticationData() -> CertificateLoadingResult {
+        guard let keys = getStoredKeys() else {
+            return .keysMissing
+        }
+        guard let certificate = getStoredCertificate() else {
+            return .certificateMissing
+        }
 
-public struct TunnelMessageSender: TestDependencyKey {
-    public var send: (WireguardProviderRequest) async throws -> WireguardProviderRequest.Response
+        @Dependency(\.date) var date
+        if date.now > certificate.refreshTime {
+            return .certificateExpired
+        }
 
-    public init(
-        send: @escaping (WireguardProviderRequest) async throws -> WireguardProviderRequest.Response
-    ) {
-        self.send = send
-    }
-
-    public static let testValue = TunnelMessageSender(send: unimplemented())
-}
-
-extension DependencyValues {
-    public var tunnelMessageSender: TunnelMessageSender {
-        get { self[TunnelMessageSender.self] }
-        set { self[TunnelMessageSender.self] = newValue }
+        return .loaded(FullAuthenticationData(
+            keys: .init(fromLegacyKeys: keys),
+            certificate: certificate
+        ))
     }
 }

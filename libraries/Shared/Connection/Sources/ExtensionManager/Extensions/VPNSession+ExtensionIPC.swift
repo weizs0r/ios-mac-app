@@ -1,5 +1,5 @@
 //
-//  Created on 14/06/2024.
+//  Created on 04/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,26 +17,19 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
+import NetworkExtension
 import Dependencies
-
-import enum ExtensionIPC.WireguardProviderRequest
+import protocol ExtensionIPC.ProviderRequest
 import enum ExtensionIPC.ProviderMessageError
+import ConnectionFoundations
 
-public struct TunnelMessageSender: TestDependencyKey {
-    public var send: (WireguardProviderRequest) async throws -> WireguardProviderRequest.Response
-
-    public init(
-        send: @escaping (WireguardProviderRequest) async throws -> WireguardProviderRequest.Response
-    ) {
-        self.send = send
-    }
-
-    public static let testValue = TunnelMessageSender(send: unimplemented())
-}
-
-extension DependencyValues {
-    public var tunnelMessageSender: TunnelMessageSender {
-        get { self[TunnelMessageSender.self] }
-        set { self[TunnelMessageSender.self] = newValue }
-    }
+extension TunnelMessageSender: DependencyKey {
+    public static let liveValue: TunnelMessageSender = {
+        @Dependency(\.tunnelManager) var tunnelManager
+        return TunnelMessageSender(
+            send: { message in
+                try await tunnelManager.session.send(message)
+            }
+        )
+    }()
 }

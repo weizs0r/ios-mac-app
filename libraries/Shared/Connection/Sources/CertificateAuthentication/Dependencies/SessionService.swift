@@ -1,5 +1,5 @@
 //
-//  Created on 14/06/2024.
+//  Created on 20/06/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -19,24 +19,29 @@
 import Foundation
 import Dependencies
 
-import enum ExtensionIPC.WireguardProviderRequest
-import enum ExtensionIPC.ProviderMessageError
-
-public struct TunnelMessageSender: TestDependencyKey {
-    public var send: (WireguardProviderRequest) async throws -> WireguardProviderRequest.Response
+public struct SessionService: TestDependencyKey {
+    public var selector: () async throws -> String
+    public var sessionCookie: () -> HTTPCookie?
 
     public init(
-        send: @escaping (WireguardProviderRequest) async throws -> WireguardProviderRequest.Response
+        selector: @escaping () async throws -> String,
+        sessionCookie: @escaping () -> HTTPCookie?
     ) {
-        self.send = send
+        self.selector = selector
+        self.sessionCookie = sessionCookie
     }
 
-    public static let testValue = TunnelMessageSender(send: unimplemented())
+    public static let testValue: SessionService = {
+        return SessionService(
+            selector: unimplemented(),
+            sessionCookie: unimplemented()
+        )
+    }()
 }
 
 extension DependencyValues {
-    public var tunnelMessageSender: TunnelMessageSender {
-        get { self[TunnelMessageSender.self] }
-        set { self[TunnelMessageSender.self] = newValue }
+    public var sessionService: SessionService {
+      get { self[SessionService.self] }
+      set { self[SessionService.self] = newValue }
     }
 }
