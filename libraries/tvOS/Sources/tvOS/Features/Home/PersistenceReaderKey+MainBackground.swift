@@ -1,5 +1,5 @@
 //
-//  Created on 19/06/2024.
+//  Created on 04/07/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,10 +17,9 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import ComposableArchitecture
-import Connection
 
-public extension PersistenceReaderKey where Self == InMemoryKey<ConnectionState?> {
-    static var connectionState: Self {
-        inMemory("connectionState")
+extension PersistenceReaderKey where Self == InMemoryKey<MainBackground> {
+    static var mainBackground: Self {
+        inMemory("mainBackground")
     }
 }
