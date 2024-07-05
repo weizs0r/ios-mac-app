@@ -1,5 +1,5 @@
 //
-//  Created on 30/05/2024.
+//  Created on 05/07/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -17,19 +17,20 @@
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
 import Foundation
+import XCTest
 
-/// Just a wrapper around a string, to make sure nobody passes open IP when it's not appropriate
-public struct TruncatedIp {
-    public let value: String
+import Ergonomics
 
-    public init?(ip: String) {
-        // Remove the last octet
-        if let index = ip.lastIndex(of: ".") { // IPv4
-            value = ip.replacingCharacters(in: index..<ip.endIndex, with: ".0")
-        } else if let index = ip.lastIndex(of: ":") { // IPv6
-            value = ip.replacingCharacters(in: index..<ip.endIndex, with: "::")
-        } else {
-            return nil
-        }
+final class TruncatedIpTests: XCTestCase {
+    func testTruncatesIPv4() {
+        XCTAssertEqual(TruncatedIp(ip: "213.153.191.49")?.value, "213.153.191.0")
+    }
+    
+    func testTruncatesIPv6() {
+        XCTAssertEqual(TruncatedIp(ip: "2001:0000:130F:0000:0000:09C0:876A:130B")?.value, "2001:0000:130F:0000:0000:09C0:876A::")
+    }
+
+    func testReturnsNilForInvalidIP() {
+        XCTAssertNil(TruncatedIp(ip: "hello")?.value)
     }
 }
