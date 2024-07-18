@@ -1,5 +1,5 @@
 //
-//  Created on 22/05/2024.
+//  Created on 18/07/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -18,18 +18,19 @@
 
 import SwiftUI
 
-struct WelcomeButtonView: View {
+struct TVButtonStyle: ButtonStyle {
 
-    let title: LocalizedStringKey
-    let action: () -> Void
+    @Environment(\.isFocused) var isFocused
 
-    @FocusState var focusState: Bool
-
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-        }
-        .focused($focusState, equals: true)
-        .buttonStyle(TVButtonStyle())
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.body)
+            .bold()
+            .padding(.horizontal, .themeSpacing32)
+            .padding(.vertical, .themeSpacing24)
+            .background(isFocused ? Color(.background, .selected) : Color(.background, .weak))
+            .foregroundStyle(isFocused ? Color(.text, .inverted) : Color(.text))
+            .cornerRadius(.themeRadius16)
+            .hoverEffect(.highlight)
     }
 }
