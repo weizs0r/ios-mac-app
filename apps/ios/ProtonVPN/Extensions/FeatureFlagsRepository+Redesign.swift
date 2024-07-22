@@ -1,5 +1,5 @@
 //
-//  Created on 04/06/2024.
+//  Created on 22/07/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,21 +16,14 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
-import Foundation
-import NetworkExtension
-import Dependencies
-import protocol ExtensionIPC.ProviderRequest
-import enum ExtensionIPC.ProviderMessageError
-import ConnectionFoundations
+import ProtonCoreFeatureFlags
+import Domain
 
-@available(iOS 16, *)
-extension TunnelMessageSender: DependencyKey {
-    public static let liveValue: TunnelMessageSender = {
-        @Dependency(\.tunnelManager) var tunnelManager
-        return TunnelMessageSender(
-            send: { message in
-                try await tunnelManager.session.send(message)
-            }
-        )
-    }()
+extension FeatureFlagsRepository {
+    var isRedesigniOSEnabled: Bool {
+        if FeatureFlagsRepository.shared.isEnabled(VPNFeatureFlagType.redesigniOS), #available(iOS 16, *) {
+            return true
+        }
+        return false
+    }
 }
