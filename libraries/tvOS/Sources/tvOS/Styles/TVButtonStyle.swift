@@ -1,5 +1,5 @@
 //
-//  Created on 23/04/2024.
+//  Created on 18/07/2024.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -18,22 +18,19 @@
 
 import SwiftUI
 
-struct QRCodeView: View {
-    static let size: CGFloat = 466
-    let string: String
-    var body: some View {
-        Image(uiImage: .generateQRCode(from: string))
-            .interpolation(.none)
-            .resizable()
-            .scaledToFit()
-            .padding()
-            .background(Color(.background, .selected))
-            .frame(.square(Self.size))
-            .clipRectangle(cornerRadius: .radius32)
-            .shadow(color: .black.opacity(0.26), radius: 160, y: 32)
-    }
-}
+struct TVButtonStyle: ButtonStyle {
 
-#Preview {
-    QRCodeView(string: "www.protonvpn.com/tv")
+    @Environment(\.isFocused) var isFocused
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.body)
+            .bold()
+            .padding(.horizontal, .themeSpacing32)
+            .padding(.vertical, .themeSpacing24)
+            .background(isFocused ? Color(.background, .selected) : Color(.background, .weak))
+            .foregroundStyle(isFocused ? Color(.text, .inverted) : Color(.text))
+            .cornerRadius(.themeRadius16)
+            .hoverEffect(.highlight)
+    }
 }
