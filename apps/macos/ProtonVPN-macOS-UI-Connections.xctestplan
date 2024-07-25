@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "01BB2DA4-9C88-4EF1-BA14-F0A890230C51",
+      "id" : "3603AEC2-D420-4366-AEEF-08AFB0CFCE5B",
       "name" : "Configuration 1",
       "options" : {
 
@@ -9,19 +9,18 @@
     }
   ],
   "defaultOptions" : {
-    "targetForVariableExpansion" : {
-      "containerPath" : "container:macOS.xcodeproj",
-      "identifier" : "EED534801EEC112000013607",
-      "name" : "ProtonVPN-mac"
-    },
     "testTimeoutsEnabled" : true
   },
   "testTargets" : [
     {
       "skippedTests" : [
-        "ConnectionTests",
+        "LoginTests",
         "MapTests",
-        "SearchTests"
+        "ProfileTests",
+        "ProtonVPNUITests",
+        "QuickSettingsTests",
+        "SearchTests",
+        "SettingsTests"
       ],
       "target" : {
         "containerPath" : "container:macOS.xcodeproj",
