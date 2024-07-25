@@ -1,5 +1,5 @@
 //
-//  Created on 23/7/24.
+//  Created on 24/7/24.
 //
 //  Copyright (c) 2024 Proton AG
 //
@@ -16,14 +16,22 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ProtonVPN.  If not, see <https://www.gnu.org/licenses/>.
 
-import XCTest
+import Foundation
 
-extension XCUIElement {
+extension String {
 
-    func waitForNonExistence(timeout: TimeInterval) -> Bool {
-        let predicate = NSPredicate( format: "exists == FALSE" )
-        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: self)
-        _ = XCTWaiter().wait(for: [expectation], timeout: timeout)
-        return !exists
+    var isValidIPv4Address: Bool {
+        // Define the IPv4 address pattern
+        let ipAddressPattern = #"^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})(\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})){3}$"#
+
+        // Create the regular expression
+        let regex = try? NSRegularExpression(pattern: ipAddressPattern, options: [])
+        
+        // Check if the string matches the pattern
+        let range = NSRange(location: 0, length: self.count)
+        let match = regex?.firstMatch(in: self, options: [], range: range)
+        
+        // Return true if a match is found
+        return match != nil
     }
 }
